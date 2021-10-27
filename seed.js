@@ -4,11 +4,11 @@ import './datetime.js';
 
 const readLines = f => Deno.readTextFileSync(f).toString().split("\n").map(l => l.trim());
 const id = i => i + 1;
-const j = f => path.join(Deno.cwd(), 'seed', f);
+const j = f => path.join(Deno.cwd(), 'data', f);
 const randomId = arr => Math.floor(Math.random() * arr.length) + 1;
 
 const db = {};
-const files = { users: j('users'), courses: j('courses'), posts: j('posts'), comments: j('comments'),addresses: j('addresses'), output: j('../db.json') };
+const files = { users: j('users'), courses: j('courses'), posts: j('posts'), comments: j('comments'),addresses: j('addresses'), jsonOutput: j('../db.json'), jsOutput: j('../db.js') };
 
 const addresses =  readLines(files.addresses).map(li => {
     return {
@@ -77,4 +77,5 @@ db.comments = comments.map((li, i) => {
     };
 });
 
-Deno.writeTextFileSync(files.output, JSON.stringify(db, null, 4), 'utf-8');
+Deno.writeTextFileSync(files.jsonOutput, JSON.stringify(db, null, 4), 'utf-8');
+Deno.writeTextFileSync(files.jsOutput, 'export const db = ' + JSON.stringify(db, null, 4), 'utf-8');
